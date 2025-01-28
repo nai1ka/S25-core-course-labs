@@ -33,10 +33,51 @@ Run the app:
 
 ```sh
 cd app
-uvicorn main:app --reload
+python -m uvicorn main:app --reload
 ```
 
 The server will be available at [http://localhost:8000](http://localhost:8000)
+
+## Docker
+
+### Building
+
+To build the image, run:
+
+```sh
+docker build -t nai1ka/time-service:latest .
+```
+
+You can use any tag you want instead of `nai1ka/time-service:latest`.
+
+### Pulling
+
+To pull the image from the Docker Hub, run:
+
+```sh
+docker pull nai1ka/time-service:latest
+```
+
+### Running
+
+To run the container, run:
+
+```sh
+docker run -p 8000:8000 nai1ka/time-service:latest
+```
+
+Don't forget to replace `nai1ka/time-service:latest` with the tag you are using.
+
+## Distroless Image Version
+
+You can also build a distroless image:
+
+```sh
+# Build the image
+docker build -t time-service-distroless -f distroless.Dockerfile .
+# Run the container
+docker run -p 8000:8000 time-service-distroless
+```
 
 ## Layout
 

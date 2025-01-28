@@ -2,6 +2,7 @@
 
 I have chosen a FastApi framework, because:
 
+* I have some experience with it
 * It is easy to set up and use
 * It has good documentation
 * Uses async functions, which makes the app faster
