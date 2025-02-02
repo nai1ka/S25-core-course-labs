@@ -1,5 +1,3 @@
-package ru.nai1ka
-
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

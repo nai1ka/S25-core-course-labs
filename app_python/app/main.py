@@ -7,11 +7,11 @@ app.include_router(index.router)
 
 if __name__ == '__main__':
     import uvicorn
-    from config import settings
+    from utils.config import Config
     uvicorn.run(
         "main:app",
-        host=settings.APP_HOST,
-        port=settings.APP_PORT,
+        host=Config.APP_HOST,
+        port=Config.APP_PORT,
         log_level="info",
         reload=True
     )

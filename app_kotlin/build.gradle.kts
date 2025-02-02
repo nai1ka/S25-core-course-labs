@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
+    id("io.gitlab.arturbosch.detekt").version("1.23.7")
 }
 
 group = "ru.nai1ka"

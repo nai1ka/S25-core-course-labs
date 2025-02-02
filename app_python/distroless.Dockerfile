@@ -17,7 +17,7 @@ COPY --from=builder /app /app
 COPY --from=builder /templates /templates
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 
-WORKDIR /app
+WORKDIR /
 
 ENV PYTHONPATH=/usr/local/lib/python3.11/site-packages
-CMD ["./uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["app/main.py"]

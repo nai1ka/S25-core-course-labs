@@ -55,3 +55,23 @@ The main page:
 
 Testing endpoint
 ![auto-docs](images/docs.png)
+
+## Unit tests
+
+I have created three unit tests for the app:
+
+1. `test_get_moscow_time_from_utc` - tests, whether my app correctly converts UTC time to Moscow time
+2. `test_server_response` - tests, whether the server returns the correct time inside of html file
+3. `test_time_update` - tests, whether the time on the page updates every second
+
+## Best practices for unit tests
+
+* Tests are independent and isolated. They don't depend on each other or on external resources.
+* They are as fast as possible
+* They are repeatable. Meaning that they will return the same result every time they are run
+* I am using `pytest` to run the tests, which is one of the most popular testing frameworks for python
+* I am using `pytest.ini` to configure the tests (in my case - setup the python path)
+* I am using FastApi's `TestClient` to test the app, which allows me to simulate requests and test routes effectively
+* I am using `freezegun` to mock the time in the tests, so that the tests are not dependent on the current time
+
+![pytest](images/lab3/pytest.png)

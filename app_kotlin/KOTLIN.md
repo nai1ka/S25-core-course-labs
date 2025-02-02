@@ -34,3 +34,20 @@ To test the app, I:
 
 ![gradle](images/gradle.png)
 ![site](images/site.png)
+
+## Unit tests
+
+I have created the following unit tests:
+
+1. Test that the site shows the correct time
+    Tests, that site return html with the correct Moscow time
+
+2. Test that the site updates the time
+   Tests, that site updates the time after the page reload
+
+## Best practices for testing
+
+* My unit tests are independent and isolated. They don't depend on each other or on external resources.
+* I am using Ktor testing features to simulate requests and test routes effectively
+* I am using recommended project sturcture to store tests. I have separated `main` and `test` packages.
+* Use descriptive names following Kotlin conventions (GIVEN-WHEN-THEN).
