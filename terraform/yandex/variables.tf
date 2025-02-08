@@ -20,6 +20,6 @@ variable "zone" {
 
 variable "ssh_key" {
   type      = string
-  default   = "~/.ssh/id_ed25519.pub"
+default   = "~/.ssh/id_ed25519.pub"
   sensitive = true
 }
