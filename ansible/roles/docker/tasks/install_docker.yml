@@ -49,4 +49,3 @@
         "no-new-privileges": true
       }
   notify: Restart Docker
-

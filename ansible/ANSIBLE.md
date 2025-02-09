@@ -321,3 +321,146 @@ And also I need to restart the docker service (`handlers/main.yml`):
     name: docker
     state: restarted
 ```
+
+## Lab 6
+
+I have created a new role `web_app` in `roles/web_app`:
+It consisnt of two tasks: `0-wipe.yml` and `main.yml`
+
+`main.yml` contains tasks to deploy docker compose file and start the container.
+
+`0-wipe.yml` contains tasks to stop and remove the container.
+
+`defaults/main.yml` contains all the variables:
+
+```yaml
+docker_image: "nai1ka/time-service:latest"
+app_port: 8080
+web_app_full_wipe: false
+```
+
+Last 50 lines of output:
+
+```bash
+❱❱❱ ansible-playbook playbooks/dev/app_python/main.yaml
+
+PLAY [Python app playbook] ******************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************************************************************************
+[WARNING]: Platform linux on host 89.169.144.195 is using the discovered Python interpreter at /usr/bin/python3.10, but future installation of another Python interpreter could change the meaning of
+that path. See https://docs.ansible.com/ansible-core/2.18/reference_appendices/interpreter_discovery.html for more information.
+ok: [89.169.144.195]
+
+TASK [docker : Install required packages] ***************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Add Docker’s official GPG key] ***********************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Add Docker APT repository] ***************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Install Docker Engine] *******************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Enable Docker service] *******************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Add user to docker group] ****************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Configure Docker daemon security] ********************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Install docker-compose] ******************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Verify Docker Compose installation] ******************************************************************************************************************************************************
+changed: [89.169.144.195]
+
+TASK [web_app : Deploy Docker Compose file] *************************************************************************************************************************************************************
+changed: [89.169.144.195]
+
+TASK [web_app : Start application with Docker Compose] **************************************************************************************************************************************************
+changed: [89.169.144.195]
+
+TASK [web_app : Stop and remove Docker container] *******************************************************************************************************************************************************
+skipping: [89.169.144.195]
+
+TASK [web_app : Remove Docker image] ********************************************************************************************************************************************************************
+skipping: [89.169.144.195]
+
+PLAY RECAP **********************************************************************************************************************************************************************************************
+89.169.144.195             : ok=12   changed=3    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+```
+
+### Best practices
+
+- I have organized related tasks using blocks
+- I have set up role dependency. My `web_app` role depends on the `docker` role.
+- Ansible tags to group tasks. I have tags `compose` and `wipe` for the tasks in the `web_app` role.
+- Wipe logic. It is located in `0-wipe.yml` and is executed only when the `web_app_full_wipe` variable is set to `true`.
+- Separate tag for wipe
+- Docker compose file and Jinja2 template. I have created a `docker-compose.yml.j2` in the `templates` directory.
+
+### Bonus task
+
+I have reused the `web_app` role to deploy a different application. I have created a new playbook `playbooks/dev/kotlin_app.yaml` and changed `docker_image` and `app_port` variables to satisfy the requirements of the Kotlin app
+
+```bash
+❱❱❱ ansible-playbook playbooks/dev/app_kotlin/main.yaml
+
+PLAY [Kotlin app playbook] ******************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************************************************************************
+[WARNING]: Platform linux on host 89.169.144.195 is using the discovered Python interpreter at /usr/bin/python3.10, but future installation of another Python interpreter could change the meaning of
+that path. See https://docs.ansible.com/ansible-core/2.18/reference_appendices/interpreter_discovery.html for more information.
+ok: [89.169.144.195]
+
+TASK [docker : Install required packages] ***************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Add Docker’s official GPG key] ***********************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Add Docker APT repository] ***************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Install Docker Engine] *******************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Enable Docker service] *******************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Add user to docker group] ****************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Configure Docker daemon security] ********************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Install docker-compose] ******************************************************************************************************************************************************************
+ok: [89.169.144.195]
+
+TASK [docker : Verify Docker Compose installation] ******************************************************************************************************************************************************
+changed: [89.169.144.195]
+
+TASK [web_app : Deploy Docker Compose file] *************************************************************************************************************************************************************
+changed: [89.169.144.195]
+
+TASK [web_app : Start application with Docker Compose] **************************************************************************************************************************************************
+changed: [89.169.144.195]
+
+TASK [web_app : Stop and remove Docker container] *******************************************************************************************************************************************************
+skipping: [89.169.144.195]
+
+TASK [web_app : Remove Docker image] ********************************************************************************************************************************************************************
+skipping: [89.169.144.195]
+
+PLAY RECAP **********************************************************************************************************************************************************************************************
+89.169.144.195             : ok=12   changed=3    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+```
+
+### Screenshots
+
+![python_app](images/python.png)
+![kotlin_app](images/kotlin.png)
