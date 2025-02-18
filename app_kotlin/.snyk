@@ -23,3 +23,14 @@ ignore:
     - '*':
         reason: "Indirect issue from Kotlin stdlib, fixed in 2.1.0 but waiting for upstream updates"
         expires: "2026-01-01T00:00:00.000Z"
+
+  SNYK-JAVA-IONETTY-8707739:
+    - '*':
+        reason: "Indirect issue from ktor-server-netty, not applicable to our use case"
+        expires: "2026-01-01T00:00:00.000Z"
+
+  SNYK-JAVA-IONETTY-8707740:
+    - '*':
+        reason: "Indirect issue from ktor-server-netty, not applicable to our use case"
+        expires: "2026-01-01T00:00:00.000Z"
+    
