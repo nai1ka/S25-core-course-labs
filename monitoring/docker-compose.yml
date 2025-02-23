@@ -5,6 +5,7 @@ networks:
 
 volumes:
   grafana-data:
+  prom_data:
 
 services:
   loki:
@@ -15,6 +16,17 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - loki
+    mem_limit: 512M
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 2
+    healthcheck:
+        test: "curl -f http://localhost:3100 || exit 1"
+        retries: 3
+        timeout: 5s
+        start_period: 5s
 
   promtail:
     image: grafana/promtail:latest
@@ -28,6 +40,17 @@ services:
       - loki
     depends_on:
       - loki
+    mem_limit: 512M
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 2
+    healthcheck:
+        test: "curl -f http://localhost:9080 || exit 1"
+        retries: 3
+        timeout: 5s
+        start_period: 5s
 
   grafana:
     image: grafana/grafana:latest
@@ -54,6 +77,15 @@ services:
           isDefault: true
           version: 1
           editable: false
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          orgId: 1
+          url: http://prometheus:9090
+          basicAuth: false
+          isDefault: false
+          version: 1
+          editable: false
         EOF
         /run.sh
     ports:
@@ -64,6 +96,45 @@ services:
       - loki
     depends_on:
       - loki
+    mem_limit: 512M
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 2
+    healthcheck:
+        test: "curl -f http://localhost:3000 || exit 1"
+        retries: 3
+        timeout: 5s
+        start_period: 5s
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prom_data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - loki
+    depends_on:
+      - loki
+      - grafana
+    mem_limit: 512M
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 2
+    healthcheck:
+        test: "curl -f http://localhost:9090 || exit 1"
+        retries: 3
+        timeout: 5s
+        start_period: 5s
+
 
 
   python_app:
@@ -72,6 +143,17 @@ services:
         - "8081:8000"
       networks:
         - loki 
+      mem_limit: 512M
+      logging:
+        driver: json-file
+        options:
+          max-size: 10m
+          max-file: 2
+      healthcheck:
+        test: "curl -f http://localhost:8000 || exit 1"
+        retries: 3
+        timeout: 5s
+        start_period: 5s
 
   kotlin_app:
       image: nai1ka/time-service-kotlin:latest
@@ -79,3 +161,15 @@ services:
         - "8082:8080"
       networks:
         - loki 
+      mem_limit: 512M
+      logging:
+        driver: json-file
+        options:
+          max-size: 10m
+          max-file: 2
+      healthcheck:
+        test: "curl -f http://localhost:8080 || exit 1"
+        retries: 3
+        timeout: 5s
+        start_period: 5s
+          

@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from routes import index
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
+
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
 app.include_router(index.router)
 

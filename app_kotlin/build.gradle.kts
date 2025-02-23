@@ -26,4 +26,6 @@ dependencies {
     implementation(libs.ktor.server.config.yaml)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
+    implementation("io.ktor:ktor-server-metrics-micrometer:2.3.4")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.11.3")
 }
