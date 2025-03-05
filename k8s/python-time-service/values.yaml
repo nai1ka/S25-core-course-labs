@@ -9,7 +9,7 @@ replicaCount: 1
 image:
   repository: nai1ka/time-service
   # This sets the pull policy for images.
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
@@ -25,15 +25,24 @@ serviceAccount:
   create: true
   # Automatically mount a ServiceAccount's API credentials?
   automount: true
+  name: "python-time-service"
   # Annotations to add to the service account
-  annotations: {}
+  annotations: 
+podAnnotations:
+  vault.hashicorp.com/agent-inject: 'true'
+  vault.hashicorp.com/role: 'python-time-service'
+  vault.hashicorp.com/agent-inject-secret-database-config: 'internal/data/database/config'
+  vault.hashicorp.com/agent-inject-template-database-config: |
+    {{- with secret "internal/data/database/config" -}}
+    export DB_USERNAME="{{ .data.data.username }}"
+    export DB_PASSWORD="{{ .data.data.password }}"
+    {{- end -}}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: "python-time-service"
 
 # This is for setting Kubernetes Annotations to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-podAnnotations: {}
 # This is for setting Kubernetes Labels to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: {}
@@ -73,17 +82,13 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
@@ -121,3 +126,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+environment:
+  debug: false
+  author: nai1ka
+  course: devops

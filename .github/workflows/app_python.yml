@@ -66,6 +66,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: app_python
-          file: app_python/distroless.Dockerfile
+          file: app_python/Dockerfile
           push: true
           tags: nai1ka/time-service:latest

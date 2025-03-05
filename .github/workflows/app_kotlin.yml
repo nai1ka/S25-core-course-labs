@@ -80,6 +80,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: app_kotlin
-          file: app_kotlin/distroless.Dockerfile
+          file: app_kotlin/Dockerfile
           push: true
           tags: nai1ka/time-service-kotlin:latest
