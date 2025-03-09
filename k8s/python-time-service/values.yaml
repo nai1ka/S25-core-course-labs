@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
-replicaCount: 1
+replicaCount: 4
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
@@ -25,21 +25,12 @@ serviceAccount:
   create: true
   # Automatically mount a ServiceAccount's API credentials?
   automount: true
-  name: "python-time-service"
   # Annotations to add to the service account
   annotations: 
 podAnnotations:
-  vault.hashicorp.com/agent-inject: 'true'
-  vault.hashicorp.com/role: 'python-time-service'
-  vault.hashicorp.com/agent-inject-secret-database-config: 'internal/data/database/config'
-  vault.hashicorp.com/agent-inject-template-database-config: |
-    {{- with secret "internal/data/database/config" -}}
-    export DB_USERNAME="{{ .data.data.username }}"
-    export DB_PASSWORD="{{ .data.data.password }}"
-    {{- end -}}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: "python-time-service"
+  name: ""
 
 # This is for setting Kubernetes Annotations to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
@@ -78,9 +69,6 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 resources:
   limits:
@@ -108,17 +96,6 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-# Additional volumes on the output Deployment definition.
-volumes:
-  - name: config-volume
-    configMap:
-      name: python-time-service-config
-
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: 
-  - name: config-volume
-    mountPath: "/app/config"
-    readOnly: true
 
 nodeSelector: {}
 
