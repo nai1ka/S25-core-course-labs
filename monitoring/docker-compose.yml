@@ -6,6 +6,8 @@ networks:
 volumes:
   grafana-data:
   prom_data:
+  python-app-data:
+  kotlin-app-data:
 
 services:
   loki:
@@ -138,11 +140,13 @@ services:
 
 
   python_app:
-      image: nai1ka/time-service-cicd:latest
+      image: nai1ka/time-service:latest
       ports:
         - "8081:8000"
       networks:
         - loki 
+      volumes:
+        - python-app-data:/app/data
       mem_limit: 512M
       logging:
         driver: json-file
@@ -161,6 +165,8 @@ services:
         - "8082:8080"
       networks:
         - loki 
+      volumes:
+        - kotlin-app-data:/app/data
       mem_limit: 512M
       logging:
         driver: json-file

@@ -112,6 +112,11 @@ Notes:
 - The workflow is defined in `.github/workflows/app_kotlin.yml`
 - The workflow is triggered only when changes occur in the `app_kotlin` directory or `.github/workflows/app_kotlin.yml` file.
 
+## Counting Visits
+
+This application is able to count total number on visits on any page. To acces this data you may use the `\visits` endpoint. The number is stored in the `visits.txt` file.
+Also, `docker-compose.yml` inside of `monitoring` folder mounts it to a volume, so the data will not be lost after the container is stopped.
+
 ## Structure
 
 Directory structure (dotfiles are omitted):

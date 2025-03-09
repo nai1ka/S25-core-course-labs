@@ -15,7 +15,9 @@ WORKDIR /app
 
 RUN addgroup -S appgroup && \
     adduser -S appuser -G appgroup && \
-    chown -R appuser:appgroup /app
+    mkdir -p /app/data && \
+    chown -R appuser:appgroup /app && \
+    chmod -R 755 /app/data
 
 COPY --from=builder --chown=appuser:appgroup /build/build/libs/*.jar app.jar
 

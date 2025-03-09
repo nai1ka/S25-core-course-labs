@@ -24,10 +24,16 @@ fun Application.configureRouting() {
 
     routing {
         get("/") {
+            incrementVisits()
             call.respondText(getMoscowTime())
         }
         get("/metrics") {
+            incrementVisits()
             call.respond(prometheusRegistry.scrape())
+        }
+        get("/visits") {
+            val visits = incrementVisits()
+            call.respond("visits: $visits")
         }
     }
 }

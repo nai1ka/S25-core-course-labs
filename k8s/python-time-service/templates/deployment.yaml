@@ -41,13 +41,15 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env: 
-          - name: MY_PASS
-            valueFrom:
-              secretKeyRef:
-                name: my-devops-password
-                key: password
-          {{- include "python-time-service.environmentVars" . | nindent 10 }}
-          
+            - name: MY_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: my-devops-password
+                  key: password
+            {{- include "python-time-service.environmentVars" . | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "python-time-service.fullname" . }}-config
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
