@@ -6,3 +6,13 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
+
+volumeMounts:
+  - name: kotlin-data
+    mountPath: /app/data
+
+persistence:
+  size: 1Gi
+  name: kotlin-data
+
+podManagementPolicy: Parallel

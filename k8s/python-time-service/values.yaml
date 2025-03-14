@@ -107,3 +107,13 @@ environment:
   debug: false
   author: nai1ka
   course: devops
+
+volumeMounts:
+  - name: python-data
+    mountPath: /app/data
+
+persistence:
+  size: 1Gi
+  name: python-data
+
+podManagementPolicy: Parallel
